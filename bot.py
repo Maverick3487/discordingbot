@@ -49,7 +49,7 @@ async def on_message(message):
     elif message.content.startswith("!야"):
         await client.send_message(message.channel, "왜")
     
-    # !S stands for 입력시 'S로 시작되는 단어 나열'
+    # !S stands for 입력시 'S로 시작되는 단어 나열
     elif message.content.startswith("!S stands for"):
         await client.send_message(message.channel, "Smile Sweet Sister Sadistic Suprise Service")
 
@@ -62,6 +62,17 @@ async def on_message(message):
         # '---' 없을 시 'Error' 출력
         except:
             await client.send_message(message.channel, "Error")
+    # !Help 입력시 명령어들 출력
+    elif message.content.startswith("!help"):
+        cmd_list = """[사용 할 수 있는 명령어들을 출력합니다.]
+야   :   !야 입력시 '왜'를 출력합니다.
+S stands for   :   !S stands for 입력시 'S로 시작되는 단어 나열합니다.
+echo   :   !echo --- 입력시 '---'이 출력됩니다.
+        """
+        await client.send_message(message.channel, cmd_list)
+    # elif message.content.startswith(""):
+    #     await client.send_message(message.channel, "")
+
 
 
 client.run('Mzg2MzM0NjE4ODkyMzY5OTMw.DQOaPg.nLRbGBItci771nEKvJ-3-FHN5Eo')

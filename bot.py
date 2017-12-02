@@ -7,8 +7,6 @@ from bs4 import BeautifulSoup as bs
 from discord.ext.commands import Bot
 from discord.ext import commands
 
-url = "http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp"
-
 # 디스코드 클라이언트를 생성합니다.
 Client = discord.Client()
 client = commands.Bot(command_prefix=None)
@@ -77,6 +75,7 @@ async def on_message(message):
         await client.send_message(message.channel, s)
 
     elif message.content.startswith("!날씨"):
+        url = "http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp"
         # urlopen()으로 데이터 가져오기 --- (※1)
         res = req.urlopen(url)
 
@@ -90,6 +89,19 @@ async def on_message(message):
         wf = re.sub(cleanr, '', wf)
         await client.send_message(message.channel, title+wf)
 
+        # 금융정보 추출
+        # HTML 가져오기
+    elif message.content.startswith("!환율"):
+        url = "http://info.finance.naver.com/marketindex/"
+        res = req.urlopen(url)
+
+        # HTML 분석하기
+        soup = bs(res, "html.parser")
+
+        # 원하는 데이터 추출하기 --- (※1)
+        price = soup.select_one("div.head_info > span.value").string
+        await client.send_message(message.channel, "usd/krw ="+price)
+
 
     # !Help 입력시 명령어들 출력
     elif message.content.startswith("!help"):
@@ -99,6 +111,7 @@ S stands for   :   !S stands for 입력시 'S로 시작되는 단어 나열합�
 echo   :   !echo --- 입력시 '---'이 출력됩니다.
 time   :   !time 입력시 현재 시간이 출력됩니다.
 날씨   :   !날씨 입력시 현재 날씨를 기상청에서 가져옵니다.
+환율   :   !환율 입력시 현재 환율을 가져옵니다.
         """
         await client.send_message(message.channel, cmd_list)
 

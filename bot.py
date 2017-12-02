@@ -2,8 +2,11 @@ import discord
 from discord.ext.commands import Bot
 from discord.ext import commands
 import requests as rq
+import urllib.request as req
 from bs4 import BeautifulSoup as bs
 import time
+
+url = "http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp"
 
 # 디스코드 클라이언트를 생성합니다.
 Client = discord.Client()
@@ -18,6 +21,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global req
     if message.content.startswith('!message'):  # 디스코드에서 입력된 문자열이 !message로 시작하는지 체크합니다.
         counter = 0
         # 메세지를 입력받은 채널로 메세지를 전송합니다.
@@ -71,6 +75,19 @@ async def on_message(message):
         (now.tm_hour, now.tm_min, now.tm_sec)
         await client.send_message(message.channel, s)
 
+    elif message.content.startswith("!날씨"):
+        # urlopen()으로 데이터 가져오기 --- (※1)
+        res = req.urlopen(url)
+
+        # BeautifulSoup으로 분석하기 --- (※2)
+        soup = bs(res, "html.parser")
+
+        # 원하는 데이터 추출하기 --- (※3)
+        title = soup.find("title").string+("\n  ")
+        wf = soup.find("wf").string 
+        await client.send_message(message.channel, title+wf)
+
+
     # !Help 입력시 명령어들 출력
     elif message.content.startswith("!help"):
         cmd_list = """[사용 할 수 있는 명령어들을 출력합니다.]
@@ -78,6 +95,7 @@ async def on_message(message):
 S stands for   :   !S stands for 입력시 'S로 시작되는 단어 나열합니다.
 echo   :   !echo --- 입력시 '---'이 출력됩니다.
 time   :   !time 입력시 현재 시간이 출력됩니다.
+날씨   :   !날씨 입력시 현재 날씨를 기상청에서 가져옵니다.
         """
         await client.send_message(message.channel, cmd_list)
 

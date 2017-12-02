@@ -45,19 +45,23 @@ async def on_message(message):
             content += number + " " + keyword + '\r\n'
         await client.send_message(message.channel, content)
 
+    # !야 입력시 '왜'가 나옴
     elif message.content.startswith("!야"):
         await client.send_message(message.channel, "왜")
     
+    # !S stands for 입력시 'S로 시작되는 단어 나열'
     elif message.content.startswith("!S stands for"):
         await client.send_message(message.channel, "Smile Sweet Sister Sadistic Suprise Service")
 
-    elif message.content.startswith("!test"):
+    # !echo --- 입력시 '---'이 출력 됌
+    elif message.content.startswith("!echo"):
         try:
             content = message.content.split()
             print(content)
             await client.send_message(message.channel, content[1])
+        # '---' 없을 시 'Error' 출력
         except:
             await client.send_message(message.channel, "Error")
 
 
-client.run('MzgzNzk0ODgzMTQxMzA0MzIy.DPpdAA.8hP8MmUN5gPOzNeuIXCruQsuPRE')
+client.run('Mzg2MzM0NjE4ODkyMzY5OTMw.DQOaPg.nLRbGBItci771nEKvJ-3-FHN5Eo')

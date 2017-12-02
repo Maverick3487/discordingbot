@@ -1,10 +1,11 @@
 import discord
-from discord.ext.commands import Bot
-from discord.ext import commands
 import requests as rq
 import urllib.request as req
-from bs4 import BeautifulSoup as bs
 import time
+import re
+from bs4 import BeautifulSoup as bs
+from discord.ext.commands import Bot
+from discord.ext import commands
 
 url = "http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp"
 
@@ -83,8 +84,10 @@ async def on_message(message):
         soup = bs(res, "html.parser")
 
         # 원하는 데이터 추출하기 --- (※3)
-        title = soup.find("title").string+("\n  ")
-        wf = soup.find("wf").string 
+        title = '['+soup.find("title").string+']\n'
+        wf = soup.find("wf").string
+        cleanr = re.compile('<.*?>')
+        wf = re.sub(cleanr, '', wf)
         await client.send_message(message.channel, title+wf)
 
 

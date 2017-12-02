@@ -3,6 +3,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 import requests as rq
 from bs4 import BeautifulSoup as bs
+import time
 
 # 디스코드 클라이언트를 생성합니다.
 Client = discord.Client()
@@ -45,7 +46,7 @@ async def on_message(message):
             content += number + " " + keyword + '\r\n'
         await client.send_message(message.channel, content)
 
-    # !야 입력시 '왜'가 나옴
+    # !야 입력시 '왜' 출력
     elif message.content.startswith("!야"):
         await client.send_message(message.channel, "왜")
     
@@ -53,7 +54,7 @@ async def on_message(message):
     elif message.content.startswith("!S stands for"):
         await client.send_message(message.channel, "Smile Sweet Sister Sadistic Suprise Service")
 
-    # !echo --- 입력시 '---'이 출력 됌
+    # !echo --- 입력시 '---'이 출력
     elif message.content.startswith("!echo"):
         try:
             content = message.content.split()
@@ -62,16 +63,24 @@ async def on_message(message):
         # '---' 없을 시 'Error' 출력
         except:
             await client.send_message(message.channel, "Error")
+
+    # !time 입력시 현재 시간을 출력
+    elif message.content.startswith("!time"):
+        now = time.localtime()
+        s = "현재시간은 %02d시 %02d분 %02d초 입니다." % \
+        (now.tm_hour, now.tm_min, now.tm_sec)
+        await client.send_message(message.channel, s)
+
     # !Help 입력시 명령어들 출력
     elif message.content.startswith("!help"):
         cmd_list = """[사용 할 수 있는 명령어들을 출력합니다.]
 야   :   !야 입력시 '왜'를 출력합니다.
 S stands for   :   !S stands for 입력시 'S로 시작되는 단어 나열합니다.
 echo   :   !echo --- 입력시 '---'이 출력됩니다.
+time   :   !time 입력시 현재 시간이 출력됩니다.
         """
         await client.send_message(message.channel, cmd_list)
-    # elif message.content.startswith(""):
-    #     await client.send_message(message.channel, "")
+
 
 
 
